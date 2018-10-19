@@ -5,10 +5,9 @@ using UnityEditor;
 
 public class Window : EditorWindow {
 
-    public string branch = "main";
-
-    List<string> replics=new List<string>();
-    List<bool> act = new List<bool>();
+    List<List<string>> replics=new List<List<string>>();//список в списке для реплик(первый - ветки, второй-реплики)
+    List<bool> act = new List<bool>();//активны ли ветке
+    List<string> branch=new List<string>();
 
     [MenuItem("Sherman/Novel")]
     public static void ShowWindow()
@@ -18,27 +17,47 @@ public class Window : EditorWindow {
 
     private void OnGUI()
     {
-        act.Add(true);
+        
         GUILayout.Label("Novel", EditorStyles.boldLabel);
+        if (GUILayout.Button("+", EditorStyles.miniButtonRight))
+        {
+            replics.Add(new List<string>());
+            //branch.Add("");
+            act.Add(true);
+        }
+        if (GUILayout.Button("-", EditorStyles.miniButtonRight))
+        {
+            if (replics.Count != 0)
+            {
+                replics.RemoveAt(replics.Count - 1);
+                act.RemoveAt(act.Count - 1);
+                branch.RemoveAt(branch.Count - 1);
+            }
+                
+        }
 
         for (int i = 0, j = 0; i < replics.Count; i++)
-        { 
-            act[j] = GUILayout.Toggle(act[j], "Active");
-            branch = EditorGUILayout.TextField("Branch: ", branch);
+        {
+
+            act[i] = GUILayout.Toggle(act[j], "Active is branch ");
+            branch[i] = EditorGUILayout.TextField("Branch: ", branch[i]);
             if(act[j])
-            { 
-                for (;i<replics.Count;j++)
-                {         
-                    EditorGUILayout.TextField("Replic", replics[i]);
+            {
+                
+                for (int k=0;j<replics[j].Count;k++)
+                {
+                    Debug.Log("1111");
+                    EditorGUILayout.TextField("Replic", replics[i][j]);
+                    Debug.Log("2222");
                 }
                 if(GUILayout.Button("+",EditorStyles.miniButtonRight))
                 {
-                    replics.Add("");
+                    replics[j].Add("");
                 }
                 if (GUILayout.Button("-", EditorStyles.miniButtonRight))
                 {
-                    if(replics.Count!=0)
-                        replics.RemoveAt(replics.Count-1);
+                    if(replics[j].Count!=0)
+                        replics[j].RemoveAt(replics[j].Count-1);
                 }
             }
         }
